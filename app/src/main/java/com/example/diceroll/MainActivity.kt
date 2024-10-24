@@ -4,17 +4,21 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,7 +40,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
 @Composable
 fun DiceRoll(viewModel: DiceViewModel = viewModel()) {
     val diceValue by viewModel.diceValue
@@ -51,39 +54,71 @@ fun DiceRoll(viewModel: DiceViewModel = viewModel()) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        // Displaying the dice with a larger font
+        Text(
+            text = "Rolled: $diceValue",
+            style = MaterialTheme.typography.headlineLarge,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
 
+        // Dice image (optional)
         Box(
             modifier = Modifier
                 .size(150.dp)
                 .border(2.dp, Color.Blue, RoundedCornerShape(10.dp))
                 .clip(RoundedCornerShape(10.dp))
+                .background(Color.LightGray)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.dice), // Use your drawable resource
+                painter = painterResource(id = R.drawable.dice),
                 contentDescription = "Dice",
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize()
             )
         }
-        Text(text = "$diceValue", style = MaterialTheme.typography.headlineLarge)
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        Button(onClick = {
-            viewModel.rollDice()
-        }) {
+        // Player points display in cards
+        Card(
+            modifier = Modifier.fillMaxWidth().padding(8.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD)) // Light blue background
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(text = "Player 1 Points: $player1Points", style = MaterialTheme.typography.bodyLarge)
+            }
+        }
+
+        Card(
+            modifier = Modifier.fillMaxWidth().padding(8.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEBEE)) // Light pink background
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(text = "Player 2 Points: $player2Points", style = MaterialTheme.typography.bodyLarge)
+            }
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Text(text = "Current Player: Player $currentPlayer", style = MaterialTheme.typography.bodyMedium)
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // Roll Dice Button
+        Button(onClick = { viewModel.rollDice() }) {
             Text(text = "Roll Dice")
         }
 
         Spacer(modifier = Modifier.height(20.dp))
 
-
-        Text(text = "Player 1 Points: $player1Points", style = MaterialTheme.typography.headlineMedium)
-        Text(text = "Player 2 Points: $player2Points", style = MaterialTheme.typography.headlineMedium)
-        Text(text = "Current Player: Player $currentPlayer", style = MaterialTheme.typography.headlineMedium)
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-
+        // Reset Game Button
         Button(onClick = { viewModel.resetGame() }) {
             Text(text = "Reset Game")
         }
