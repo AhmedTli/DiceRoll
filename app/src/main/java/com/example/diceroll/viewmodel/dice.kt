@@ -1,4 +1,4 @@
-package com.example.diceroll.model
+package com.example.diceroll.viewmodel
 
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.lifecycle.ViewModel
@@ -15,7 +15,7 @@ class DiceViewModel : ViewModel() {
         private set
 
     var currentPlayer = mutableIntStateOf(1)
-        private set
+
 
     fun rollDice() {
         diceValue.intValue = Random.nextInt(1, 7)

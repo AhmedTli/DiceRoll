@@ -30,7 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.diceroll.model.DiceViewModel
+import com.example.diceroll.viewmodel.DiceViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,6 +40,8 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+
 @Composable
 fun DiceRoll(viewModel: DiceViewModel = viewModel()) {
     val diceValue by viewModel.diceValue
@@ -54,14 +56,14 @@ fun DiceRoll(viewModel: DiceViewModel = viewModel()) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // Displaying the dice with a larger font
+
         Text(
             text = "Rolled: $diceValue",
             style = MaterialTheme.typography.headlineLarge,
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        // Dice image (optional)
+
         Box(
             modifier = Modifier
                 .size(150.dp)
@@ -78,7 +80,7 @@ fun DiceRoll(viewModel: DiceViewModel = viewModel()) {
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Player points display in cards
+
         Card(
             modifier = Modifier.fillMaxWidth().padding(8.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
