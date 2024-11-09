@@ -3,6 +3,8 @@ package com.example.diceroll
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -23,14 +25,22 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.diceroll.viewmodel.DiceViewModel
+
+
+
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,7 +58,14 @@ fun DiceRoll(viewModel: DiceViewModel = viewModel()) {
     val player1Points by viewModel.player1Points
     val player2Points by viewModel.player2Points
     val currentPlayer by viewModel.currentPlayer
+    var isRolling by remember { mutableStateOf(false) }
 
+    // Rotation angle based on animation state
+    val rotationAngle by animateFloatAsState(
+        targetValue = if (isRolling) 360f else 0f,  // Rotate 360 degrees
+        animationSpec = tween(durationMillis = 100),  // 0.5-second duration
+        finishedListener = { isRolling = false }, label = ""  // Reset after animation completes
+    )
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -70,11 +87,14 @@ fun DiceRoll(viewModel: DiceViewModel = viewModel()) {
                 .border(2.dp, Color.Blue, RoundedCornerShape(10.dp))
                 .clip(RoundedCornerShape(10.dp))
                 .background(Color.LightGray)
+                .rotate(rotationAngle)  // Apply rotation animation
+
         ) {
             Image(
                 painter = painterResource(id = R.drawable.dice),
                 contentDescription = "Dice",
                 modifier = Modifier.fillMaxSize()
+
             )
         }
 
@@ -114,7 +134,9 @@ fun DiceRoll(viewModel: DiceViewModel = viewModel()) {
         Spacer(modifier = Modifier.height(20.dp))
 
         // Roll Dice Button
-        Button(onClick = { viewModel.rollDice() }) {
+        Button(onClick = {
+            isRolling = true
+            viewModel.rollDice() }) {
             Text(text = "Roll Dice")
         }
 
